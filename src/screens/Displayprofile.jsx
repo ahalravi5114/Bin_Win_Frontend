@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, TouchableOpacity, Dimensions, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, Image, TouchableOpacity, Dimensions, StyleSheet, ScrollView, ActivityIndicator, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { BarChart } from "react-native-chart-kit";
 import { Home, User, Trophy, Gamepad } from "lucide-react-native";
@@ -20,7 +20,7 @@ const getTreeImage = (visits) => {
 const Displayprofile = () => {
   const navigation = useNavigation();
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState();
   const [error, setError] = useState("");
   const [userId, setUserId] = useState(null);
 
@@ -33,7 +33,8 @@ const Displayprofile = () => {
           setUserId(parsedData.user_id); // ✅ Set userId state
         }
       } catch (error) {
-        console.error("Error fetching user ID:", error);
+        Alert.alert("Failed to fetch user ID");
+        //console.error("Error fetching user ID:", error);
       }
     };
 
@@ -41,12 +42,13 @@ const Displayprofile = () => {
   }, []);
 
   useEffect(() => {
-    if (!userId) return; // Wait for userId to be set
+   // if (!userId) return; // Wait for userId to be set
 
     const fetchUserProfile = async () => {
       try {
+        setLoading(true);
         const response = await fetch(
-          `https://binwinbackend.onrender.com/displayprofile?user_id=${userId}`
+          `https://binwinbackend.onrender.com/displayprofile?user_id=1`
         );
         const data = await response.json();
         if (data.profile) {
